@@ -1,12 +1,14 @@
 // import { useEffect, useState } from "react";
-import { Link, useLoaderData, useParams } from "react-router-dom";
+import { Link, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { FaArrowLeft, FaLocationDot } from "react-icons/fa6";
+import { toast } from "react-toastify";
 
 import Spinners from "../coponents/Spinners";
 
-const JobsPage = () => {
+const JobsPage = ({ deleteJob }) => {
   // const [jobs, setJobs] = useState(null);
   // const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
   const { id } = useParams();
   const job = useLoaderData();
   // useEffect(() => {
@@ -24,6 +26,15 @@ const JobsPage = () => {
   //   fetchData();
   // }, []);
 
+  const onDeleteJob = (jobId) => {
+    const confrim = window.confirm(
+      "are you want to sure to delete this listig?"
+    );
+    if (!confrim) return;
+    deleteJob(jobId);
+    toast("Delete Successfully");
+    navigate("/jobs");
+  };
   return (
     <>
       <section>
@@ -92,13 +103,16 @@ const JobsPage = () => {
 
               <div className="bg-white p-6 rounded-lg shadow-md mt-6">
                 <h3 className="text-xl font-bold mb-6">Manage Job</h3>
-                <a
-                  href="/add-job.html"
+                <Link
+                  to={`/edit-job/${job.id}`}
                   className="bg-indigo-500 hover:bg-indigo-600 text-white text-center font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
                 >
                   Edit Job
-                </a>
-                <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block">
+                </Link>
+                <button
+                  onClick={() => onDeleteJob(job.id)}
+                  className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-full w-full focus:outline-none focus:shadow-outline mt-4 block"
+                >
                   Delete Job
                 </button>
               </div>
